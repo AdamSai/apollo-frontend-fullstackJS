@@ -9,6 +9,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 const GET_USERS = gql`
 	{
 		getAllUsers {
+			id
 			firstName
 			lastName
 			email
@@ -43,6 +44,7 @@ class CreateUser extends Component {
 	render() {
 		return (
 			<>
+				<h2>Create a user</h2>
 				<Mutation mutation={CREATE_USER}>
 					{(createUser) => (
 						<div>
@@ -175,6 +177,7 @@ const createTable = (array) => {
 		return (
 			<tr key={index}>
 				<td>{index}</td>
+				<td>{value.id}</td>
 				<td>{value.firstName}</td>
 				<td>{value.lastName}</td>
 				<td>{value.email}</td>

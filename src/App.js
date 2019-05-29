@@ -22,11 +22,12 @@ const App = () => {
 				crossOrigin="anonymous"
 			/>
 			<CreateUser />
-			{/* <DelayedUser />
+			<DelayedUser />
+			<h2>Show all users</h2>
 			<button onClick={() => setShowAllUsers(!showAllusers)}>
 				{showAllusers ? 'Hide all users' : 'Show all users'}
 			</button>
-			{showAllusers && <AllUsers setUsers={setUsers} />} */}
+			{showAllusers && <AllUsers setUsers={setUsers} />}
 		</ApolloProvider>
 	);
 };
