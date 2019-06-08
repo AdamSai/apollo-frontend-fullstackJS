@@ -1,5 +1,4 @@
-import React, { useState, Component } from 'react';
-import ApolloClient from 'apollo-boost';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 import _ from 'lodash';
@@ -35,51 +34,44 @@ const CREATE_USER = gql`
 	}
 `;
 
-class CreateUser extends Component {
-	constructor(props) {
-		super(props);
-		this.state = { userInput: {} };
-	}
+const CreateUser = () => {
+	const [userInput, setUserInput] = useState({});
+	const [response, setResponse] = useState(undefined);
 
-	render() {
-		return (
-			<>
-				<h2>Create a user</h2>
-				<Mutation mutation={CREATE_USER}>
-					{(createUser) => (
-						<div>
-							<form
-								onSubmit={async (e) => {
-									e.preventDefault();
-									const response = await createUser({
-										variables: { UserInput: this.state.userInput }
-									});
-									this.setState({ response: response.data.createUser });
-								}}
-								onChange={(e) => {
-									let userInput = this.state.userInput;
-									userInput[e.target.name] = e.target.value;
-									this.setState({ userInput: userInput });
-								}}>
-								<input name="firstName" placeholder="First Name" />
-								<input name="lastName" placeholder="Surname" />
-								<input name="username" placeholder="Username" />
-								<input name="password" type="password" placeholder="Password" />
-								<input name="email" placeholder="Email" />
-								<button>Submit</button>
-							</form>
-						</div>
-					)}
-				</Mutation>
-				{this.state && JSON.stringify(this.state)}
-				{this.state.response &&
-					`${JSON.parse(this.state.response).status} ${
-						JSON.parse(this.state.response).msg
-					}`}
-			</>
-		);
-	}
-}
+	return (
+		<>
+			<h2>Create a user</h2>
+			{response && <h2>{response.msg}</h2>}
+			<Mutation mutation={CREATE_USER}>
+				{(createUser) => (
+					<div>
+						<form
+							onSubmit={async (e) => {
+								e.preventDefault();
+								const res = await createUser({
+									variables: { UserInput: userInput }
+								});
+								setResponse(JSON.parse(res.data.createUser));
+								console.log(res);
+								console.log(response);
+							}}
+							onChange={(e) => {
+								setUserInput({ ...userInput, [e.target.name]: e.target.value });
+							}}>
+							<input name="firstName" placeholder="First Name" />
+							<input name="lastName" placeholder="Surname" />
+							<input name="username" placeholder="Username" />
+							<input name="password" type="password" placeholder="Password" />
+							<input name="email" placeholder="Email" />
+							<button>Submit</button>
+						</form>
+					</div>
+				)}
+			</Mutation>
+			{userInput && JSON.stringify(userInput)}
+		</>
+	);
+};
 
 const User = ({ id }) => (
 	<Query query={GET_USER} variables={{ id }} skip={!id} notifyOnNetworkStatusChange>
